@@ -53,15 +53,15 @@ public class Proposal {
 	public List<String> setOperators(String... operatorNames) {
 		List<String> nonCoinvoltiOp = new ArrayList<>();
 		
-		operators.values().forEach(o->{
-			for (String name : nonCoinvoltiOp) {
-				if ( o.getName().equals(name) ) {
-					workingOperators.put(o.getName(), o);
-					return;
-				}
+		for (String string : operatorNames) {
+			Operator op = operators.get(string);
+			if ( op!= null && op.getDestinations().containsKey(this.destination.getName())) {
+				workingOperators.put(string, op);
+			}else {
+				nonCoinvoltiOp.add(string);
 			}
-			nonCoinvoltiOp.add(o.getName());
-		});
+		}
+		
         return nonCoinvoltiOp.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
 	}
 	
