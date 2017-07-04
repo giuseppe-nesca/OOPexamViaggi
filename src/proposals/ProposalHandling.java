@@ -44,7 +44,7 @@ public class ProposalHandling {
 	public Proposal newProposal(String name, String destinationName) throws ProposalException {
 		if (proposte.containsKey(name)) throw new ProposalException();
 		if (!destinations.containsKey(destinationName)) throw new ProposalException(); 
-        Proposal p = new Proposal(name,destinations.get(destinationName),this.users);
+        Proposal p = new Proposal(name,destinations.get(destinationName), this.users, this.operators);
         proposte.put(name, p);
 		return p;
 	}

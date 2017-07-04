@@ -20,16 +20,18 @@ public class Proposal {
 	
 	private String name;
 	private Destination destination;
-	private Map<String,User> interestedUsers;
-	private Map<String,String> interestedStrangers;
+	private Map<String,User> interestedUsers = new HashMap<>();
+	private Map<String,String> interestedStrangers = new HashMap<>();
 	private Map<String,Operator> workingOperators = new HashMap<>();
 	private Map<String,Quote> quotes = new HashMap<>();
 
 	
-	public Proposal(String name, Destination destination,  Map<String,User> users){
+	public Proposal(String name, Destination destination,  Map<String,User> users, Map<String,Operator> operators){
 		this.users = users;
 		this.name = name;
 		this.destination = destination;
+		this.users = users;
+		this.operators = operators;
 	}
 	
 	public List<String> setUsers(String... userNames) {
