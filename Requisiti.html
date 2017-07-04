@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Gestione di proposte di viaggio</title>
+<link href=".css.css" rel="stylesheet" type="text/css">
+<style>
+@media print {  /* adjusted to print the html to a single-page pdf */
+body {
+	font-size: 10pt;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Gestione di proposte di viaggio</h1>
+<p>
+
+Si scriva un programma per la gestione di proposte di viaggio. Le classi si trovano nel package <b>proposals</b>; 
+la classe principale &egrave; <b>ProposalHandling</b>. La classe <b>Example</b> nel package <b>main</b> presenta esempi di uso dei metodi principali 
+ed esempi dei controlli richiesti.
+Le eccezioni sono di tipo <b>ProposalException</b>.<br>
+
+<p>
+&Egrave; disponibile la <a href="http://softeng.polito.it/courses/docs/api/index.html" target="api" target="_blank">JDK documentation</a>.
+</p>
+
+<h2>R1: Utenti e destinazioni</h2>
+
+
+Il metodo <b>addUsers</b> (String... userNames) definisce gli utenti con i loro nomi e restituisce il numero di utenti definiti.<br>
+
+Il metodo <b>addOperator</b> (String operatorName, String... destinationNames) lancia un'eccezione se il nome dell'operatore &egrave; duplicato; altrimenti definisce un operatore e gli associa le destinazioni trattate. Inoltre il metodo definisce le destinazioni dati i loro nomi, se non sono gi&agrave; state definite in una chiamata precedente.<br>
+
+Il metodo <b>getDestOperators</b> (String destinationName) d&agrave; la lista ordinata dei nomi degli operatori che trattano la destinazione data.<br>
+
+<h2>R2: Proposte</h2>
+
+Il metodo <b>newProposal</b> (String name, String destinationName) definisce una proposta (di viaggio) con il nome e la destinazione. Lancia un'eccezione se il nome della proposta &egrave; duplicato o se la destinazione non &egrave; stata definita.<br>
+
+Il metodo di <b>Proposal</b> <b>setUsers</b> (String... userNames) associa alla proposta gli utenti interessati dati i loro nomi. Se ci sono utenti indefiniti non li associa ma li d&agrave; come risultato in una lista ordinata alfabeticamente.<br>
+
+<ul class="hint">
+<li>Nota: Alcune strutture dati (come gli utenti) della classe principale devono essere accessibili alla classe <i>Proposal</i> 
+per controlli. Ad esempio, queste strutture potrebbero essere passate al costruttore di <i>Proposta</i>.
+</ul>
+
+<h2>R3: Preventivi</h2>
+
+Il metodo di Proposta <b>setOperators</b> (String... operatorNames) collega la proposta agli operatori dati. Gli operatori devono trattare la destinazione della proposta: quelli che non sono definiti o non la trattano non sono collegati e sono forniti come risultato in una lista ordinata alfabeticamente.<br>
+
+Il metodo di Proposta <b>addQuote</b> (String operatorName, int amount) definisce un preventivo (quote) per la proposta indicando l'operatore e l'importo (amount). Lancia un'eccezione se l'operatore non &egrave; collegato alla proposta.<br>
+
+Il metodo di Proposta <b>getQuotes</b> () fornisce la lista dei preventivi relativi alla proposta ordinati per importi decrescenti e a parit&agrave; di importo secondo l'ordine alfabetico dei nomi degli operatori.<br>
+La classe <b>Quote</b> offre i metodi  getProposalName,  getOperatorName,  getAmount, getNChoices per leggere i nomi della proposta e dell'operatore, l'importo e il n. di scelte (R4).<br>
+
+<h2>R4: Scelte</h2>
+
+Il metodo di Proposta <b>makeChoice</b> (String userName, String operatorName) consente ad un utente di scegliere un preventivo associato alla proposta: il preventivo &egrave; quello fornito dall'operatore indicato. Il metodo lancia un'eccezione se l'utente non &egrave; associato alla proposta o se l'operatore non ha presentato un preventivo per la proposta.<br>
+
+Il metodo di Proposta <b>getWinningQuote</b> () se ci sono preventivi per la proposta d&agrave; quello migliore, cio&egrave; quello con pi&ugrave; scelte e a parit&agrave; di numero di scelte quello con importo inferiore; d&agrave; <i>null</i> se non ci sono preventivi.<br>
+
+<h2>R5: Statistiche</h2>
+
+Il metodo <b>totalAmountOfQuotesPerDestination</b> d&agrave; l'importo totale dei preventivi per destinazione; le destinazioni sono ordinate alfabeticamente. Le destinazioni prive di preventivi sono scartate. Nota: la destinazione di un preventivo &egrave; quella della proposta a cui si riferisce il preventivo.<br>
+
+Il metodo <b>operatorsPerNumberOfQuotes</b> d&agrave; la lista degli operatori (ordinati alfabeticamente per nome) per numero decrescente di preventivi; gli operatori senza preventivi sono scartati.<br>
+
+Il metodo <b>numberOfUsersPerDestination</b> d&agrave; il numero di utenti per destinazione; le destinazioni sono ordinate alfabeticamente. Le destinazioni prive di utenti sono scartate.
+Nota: le destinazioni di un utente sono quelle delle proposte alle quali l'utente &egrave; stato associato con il metodo setUsers.<br>
+
+Il metodo <b> proposalsPerNumberOfQuotes() </b> d&agrave; i nomi delle proposte per numero di preventivi decrescenti; i nomi delle proposte con lo stesso numero di preventivi sono ordinati alfabeticamente.
+
+</body>
+</html>
