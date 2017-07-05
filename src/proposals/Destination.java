@@ -11,5 +11,4 @@ public class Destination {
 	public Destination(String name){
 		this.name = name;
 	}
-
 }

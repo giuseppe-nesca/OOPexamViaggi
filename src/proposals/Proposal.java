@@ -44,10 +44,18 @@ public class Proposal {
 		}
         return interestedStrangers.values().stream().sorted().collect(Collectors.toList()); //natural order
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getDestinationName(){ return destination.getName(); }
 
 	public SortedSet<String> getUsers() {
 		
-        return null;
+        return new TreeSet<String>(
+        		interestedUsers.keySet().stream().sorted().collect(Collectors.toSet())
+        		);
 	}
 	
 	public List<String> setOperators(String... operatorNames) {
@@ -60,41 +68,43 @@ public class Proposal {
 			}else {
 				nonCoinvoltiOp.add(string);
 			}
-		}
-		
+		}		
         return nonCoinvoltiOp.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
 	}
 	
 	public SortedSet<String> getOperators() {
-        return null;
+		return new TreeSet<String>(
+        		operators.keySet().stream().sorted().collect(Collectors.toSet())
+        		);
 	}
 	
 	public void addQuote(String operatorName, int amount) throws ProposalException {
 		if(!workingOperators.containsKey(operatorName)) throw new ProposalException();
 		
-		quotes.put(operatorName, new Quote(workingOperators.get(operatorName),amount));
+		quotes.put(operatorName, new Quote(workingOperators.get(operatorName),amount, this));
 		
 	}
+	
 	public List<Quote> getQuotes() {		
         return quotes.values().stream().sorted(Comparator.comparing(Quote::getAmount,Comparator.reverseOrder())).collect(Collectors.toList());
 	}
 	
 	//R4
-		public void makeChoice (String userName, String operatorName) throws ProposalException {
-			if (!interestedUsers.containsKey(userName)) throw new ProposalException();
-			if (!quotes.containsKey(operatorName)) throw new ProposalException();
-			
-			quotes.get(operatorName).makeChoice(interestedUsers.get(userName));
+	public void makeChoice (String userName, String operatorName) throws ProposalException {
+		if (!interestedUsers.containsKey(userName)) throw new ProposalException();
+		if (!quotes.containsKey(operatorName)) throw new ProposalException();
+
+		quotes.get(operatorName).makeChoice(interestedUsers.get(userName));
+	}
+
+	public Quote getWinningQuote () {
+		Optional<Quote> bestQuote =
+				quotes.values().stream()
+				.max(Comparator.comparing(Quote::getNChoices).thenComparing(Quote::getAmount,Comparator.reverseOrder()));
+		try{
+			return bestQuote.get();
+		}catch(NoSuchElementException e){
+			return null;
 		}
-		
-		public Quote getWinningQuote () {
-			Optional<Quote> bestQuote =
-			quotes.values().stream()
-			.max(Comparator.comparing(Quote::getNChoices).thenComparing(Quote::getAmount,Comparator.reverseOrder()));
-	        try{
-	        	return bestQuote.get();
-	        }catch(NoSuchElementException e){
-	        	return null;
-	        }
-		}	
+	}	
 }

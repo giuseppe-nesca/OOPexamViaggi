@@ -7,11 +7,9 @@ public class Operator {
 	
 	private String name;
 	private Map<String,Destination>destinations = new HashMap<>();
-	//private String[] destinationNames;
 	
 	public Operator(String name, Map<String,Destination> destinations){
 		this.name = name;
-		//this.destinationNames = destinationNames;
 		this.destinations = destinations;
 	}
 

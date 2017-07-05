@@ -19,13 +19,10 @@ public class ProposalHandling {
 	
 	public void addOperator(String operatorName, String... destinationNames) throws ProposalException {
 		if(operators.containsKey(operatorName)) throw new ProposalException("operatore gia' presente");
-		//operators.put(operatorName, new Operator(operatorName, destinationNames));
 		Map<String,Destination> opdestinations = new HashMap<>();
 		for (String string : destinationNames) {
 			Destination d = new Destination(string);
 			this.destinations.put(string, d);
-			Destination test;
-			test = this.destinations.get(string);
 			opdestinations.put(string, d);
 		}
 		operators.put(operatorName, new Operator(operatorName, opdestinations));
@@ -58,21 +55,59 @@ public class ProposalHandling {
 //R5
 	public SortedMap<String, Integer> totalAmountOfQuotesPerDestination() {
 		
-        return null;
+        return 
+        		proposte.values().stream()
+        		.flatMap(s -> s.getQuotes().stream())
+        		.sorted(Comparator.comparing(q -> q.getProposal().getDestinationName()))
+        		.collect(Collectors.groupingBy(
+        				q -> q.getProposal().getDestinationName(),
+        				TreeMap::new, 
+        				Collectors.summingInt(Quote::getAmount)))
+        		;
 	}
 	
 	public SortedMap<Integer, List<String>> operatorsPerNumberOfQuotes() {
-//		proposte.values().stream()
-//		.flatMap(s-> { s.getQuotes().stream(); })
-//		.collect(Collectors.groupingBy(Quote::getOperatorName,TreeMap::new , Collectors.counting()));
-        return null;
+
+        return 
+        		proposte.values().stream()
+        		.flatMap( p -> p.getQuotes().stream() )
+        		.map ( q -> q.getOperatorName() )
+        		.sorted()
+        		.collect(Collectors.groupingBy(
+        				q->q,
+        				TreeMap::new,
+        				Collectors.summingInt(s->1)))		//conto nQuotes
+				.entrySet().stream()						
+				.collect(Collectors.groupingBy(
+						Map.Entry::getValue,
+						TreeMap::new,
+						Collectors.mapping(
+								Map.Entry::getKey,
+								Collectors.toList())))		
+				.descendingMap();							//ottengo il risultato di tipo richiesto
 	}
 
 	public SortedMap<String, Long> numberOfUsersPerDestination() {
-        return null;
+        return 
+        		proposte.values().stream()
+        		.filter( p -> p.getUsers().size() > 0 )
+        		.sorted(Comparator.comparing(Proposal::getDestinationName))
+        		.collect(Collectors.groupingBy(Proposal::getDestinationName, 
+        				TreeMap::new,
+        				Collectors.summingLong( p -> ((Proposal) p).getUsers().size() )))
+        		;
 	}
 	
 	public SortedMap<Integer, List<String>> proposalsPerNumberOfQuotes() {
-        return null;
+        return 
+        		proposte.values().stream()
+        		.sorted(Comparator.comparing(Proposal::getDestinationName))
+        		.collect(Collectors.groupingBy(
+        				p -> p.getQuotes().size(),
+        				TreeMap::new,
+        				Collectors.mapping(
+        						Proposal::getName,
+        						Collectors.toList())))
+        		.descendingMap();
 	}
 }
